@@ -1,0 +1,12 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+# Keep the .Rproj file
+!queueR.Rproj
+
+# Ignore built src files
+src/*.o
+
+
