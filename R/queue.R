@@ -1,33 +1,45 @@
-## template from https://www.cyclismo.org/tutorial/R/s4Classes.html
-
+#' An S4 class to represent a queue.
+#'
+#' @slot arr A numeric \code{vector} indicating the values of the queue. 
+#'     Not accessable to the user. 
+#' @slot size A number indicating the number of elements in the queue.
+#' @return An S4 class specifying a queue. 
+#' @rdname queue-class
+#' @exportClass "queue"
 queue <- setClass(
-  # Set the name for the class
-  "queue",
+  Class = "queue",
   
   # Define the slots
-  slots <- list(
+  slots = list(
     arr = "vector",
     size = "numeric"
   ),
   
-  prototype=list(
+  prototype = list(
     arr = numeric(0), 
     size = 0
-  ),
-  
-  validity=function(object)
-  {
-    if ( !is.numeric(object@arr) ) {
-      return("Non-numeric array passed to queue")
-    }
-    
-    if ( !object@size < 0 || object@size != length(object@arr) ) {
-      return("Incorrectly specified size")
-    }
-    return(TRUE)
-  }
+  )
 )
 
+#' Constructor for class
+#' 
+#' @include isNumberVector.R
+#' @export queue
+queue <- function(arr) {
+  if ( !is.number.vector(arr) ) {
+    stop("Error! Arr must be numeric")
+  }
+  return( new("queue", arr = arr, size = length(arr)) )
+}
+
+#' pop
+#' 
+#' @description A function used to remove the oldest value from a queue.
+#' 
+#' @param \code{object} - An object of class \code{queue}.
+#' 
+#' @include RcppExports.R
+#' @exportMethod pop
 setMethod(f = "pop",
           signature = "queue",
           definition = function(object) {
@@ -42,8 +54,15 @@ setMethod(f = "pop",
             return(out$val)
           } )
 
-
-setMethod("push", signature(object = "queue", val = "numeric"), 
+#' Push
+#' 
+#' @description A function used to push a new value to a queue.
+#' 
+#' @param \code{object} - An object of class \code{queue}.
+#' 
+#' @include RcppExports.R
+#' @exportMethod push
+setMethod(f = "push", signature = "queue",
           definition = function(object, val) {
             
             obj.tmp <- pushC( slot(object, "size"), 
