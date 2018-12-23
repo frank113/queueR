@@ -9,5 +9,4 @@
 # Ignore built src files
 src/*.o
 src/*.o.tmp
-
-
+src/*.so
